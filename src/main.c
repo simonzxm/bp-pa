@@ -46,10 +46,3 @@ GameState show_main_menu() {
     int choice = sts_read_int_range("Enter your choice: ", 1, 2);
     return choice == 1 ? STATE_GAMEPLAY : STATE_EXIT;
 }
-
-GameState start_gameplay() {
-    sts_clear_screen();
-    sts_println("The game has started!");
-    sts_pause(NULL);
-    return STATE_MENU;
-}
