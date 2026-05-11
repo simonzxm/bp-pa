@@ -3,8 +3,8 @@
 #include "sts_io.h"
 #include <assert.h>
 
-Player *player;
-Enemy *enemy;
+extern Player *player;
+extern Enemy *enemy;
 
 int main() {
     sts_println("Running card tests...\n");
