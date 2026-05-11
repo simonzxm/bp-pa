@@ -43,6 +43,16 @@ Card *find_card_in_hand(Deck *deck, int index) {
     return NULL;
 }
 
+int get_hand_size(Deck *deck) {
+    int count = 0;
+    for (int i = 0; i < deck->size; i++) {
+        if (deck->status[i] == CARD_IN_HAND) {
+            count++;
+        }
+    }
+    return count;
+}
+
 void discard_card(Deck *deck, int index) {
     assert(index >= 0 && index < deck->size);
     for (int i = 0, j = 0; i < deck->size; i++) {

@@ -27,7 +27,8 @@ GameState start_gameplay() {
                 sts_printf("(%d) %s\n", ++j, deck.cards[i].description);
             }
         }
-        int choice = sts_read_int_range("Choose an action: ", 0, deck.size);
+        int choice =
+            sts_read_int_range("\nChoose an action: ", 0, get_hand_size(&deck));
         if (choice == 0) {
             if (enemy->base.health > 0) {
                 deal_damage(&player->base, 8);

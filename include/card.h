@@ -45,6 +45,7 @@ typedef struct {
 
 void init_deck(Deck *deck, CardType *card_types, int size);
 Card *find_card_in_hand(Deck *deck, int index);
+int get_hand_size(Deck *deck);
 void discard_card(Deck *deck, int index);
 void free_deck(Deck *deck);
 
