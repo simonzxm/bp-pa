@@ -62,6 +62,7 @@ GameState start_gameplay() {
     }
     sts_pause(NULL);
     sts_clear_header();
+    free_deck(&deck);
     return STATE_MENU;
 }
 
