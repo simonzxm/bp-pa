@@ -9,7 +9,9 @@ Enemy *enemy;
 Deck deck;
 
 CardType starting_cards[] = {
-    CARD_STRIKE, CARD_STRIKE, CARD_DEFEND, CARD_DEFEND, CARD_BLOODLETTING,
+    CARD_STRIKE, CARD_STRIKE, CARD_STRIKE,       CARD_STRIKE,
+    CARD_STRIKE, CARD_DEFEND, CARD_DEFEND,       CARD_DEFEND,
+    CARD_DEFEND, CARD_DEFEND, CARD_BLOODLETTING,
 };
 
 GameState start_gameplay() {
@@ -17,7 +19,8 @@ GameState start_gameplay() {
     Enemy e = {{40, 40, 0}};
     player = &p;
     enemy = &e;
-    init_deck(&deck, starting_cards, 5);
+    init_deck(&deck, starting_cards, sizeof(starting_cards) / sizeof(CardType));
+    draw_cards(&deck, 5);
     sts_set_header(draw_hud);
     while (player->base.health > 0 && enemy->base.health > 0) {
         sts_clear_screen();
@@ -28,15 +31,16 @@ GameState start_gameplay() {
             }
         }
         int choice =
-            sts_read_int_range("\nChoose an action: ", 0, get_hand_size(&deck));
+            sts_read_int_range("\nChoose an action: ", 0, deck.cards_in_hand);
         if (choice == 0) {
             if (enemy->base.health > 0) {
                 deal_damage(&player->base, 8);
                 sts_clear_screen();
                 sts_println("Enemy attacks for 8 damage!");
+                player->base.block = 0;
                 player->energy = player->initial_energy;
-                free_deck(&deck);
-                init_deck(&deck, starting_cards, 5);
+                discard_all(&deck);
+                draw_cards(&deck, 5);
             }
         } else {
             Card *card = find_card_in_hand(&deck, choice - 1);

@@ -26,6 +26,7 @@ extern Card cards[CARD_TYPE_COUNT];
 void play_card(Card *card, Player *player, Enemy *enemy);
 
 typedef enum {
+    CARD_IN_DRAW_PILE,
     CARD_IN_HAND,
     CARD_IN_DISCARD,
 } CardStatus;
@@ -34,12 +35,17 @@ typedef struct {
     Card *cards;
     CardStatus *status;
     int size;
+    int cards_in_draw_pile;
+    int cards_in_hand;
+    int cards_in_discard;
 } Deck;
 
 void init_deck(Deck *deck, CardType *card_types, int size);
+void draw_cards(Deck *deck, int count);
 Card *find_card_in_hand(Deck *deck, int index);
-int get_hand_size(Deck *deck);
+void shuffle_deck(Deck *deck);
 void discard_card(Deck *deck, int index);
+void discard_all(Deck *deck);
 void free_deck(Deck *deck);
 
 #endif

@@ -42,12 +42,33 @@ void init_deck(Deck *deck, CardType *card_types, int size) {
     deck->size = size;
     for (int i = 0; i < size; i++) {
         deck->cards[i] = cards[card_types[i]];
-        deck->status[i] = CARD_IN_HAND;
+        deck->status[i] = CARD_IN_DRAW_PILE;
+    }
+    deck->cards_in_draw_pile = size;
+    deck->cards_in_hand = 0;
+    deck->cards_in_discard = 0;
+}
+
+void draw_cards(Deck *deck, int count) {
+    assert(deck->size >= count);
+    for (int i = 0; count > 0; i++) {
+        if (deck->cards_in_draw_pile == 0) {
+            shuffle_deck(deck);
+        }
+        if (i >= deck->size) {
+            i = 0;
+        }
+        if (deck->status[i] == CARD_IN_DRAW_PILE) {
+            deck->status[i] = CARD_IN_HAND;
+            deck->cards_in_draw_pile--;
+            deck->cards_in_hand++;
+            count--;
+        }
     }
 }
 
 Card *find_card_in_hand(Deck *deck, int index) {
-    assert(index >= 0 && index < deck->size);
+    assert(index >= 0 && index < deck->cards_in_hand);
     for (int i = 0, j = 0; i < deck->size; i++) {
         if (deck->status[i] == CARD_IN_HAND) {
             if (j++ == index) {
@@ -58,26 +79,39 @@ Card *find_card_in_hand(Deck *deck, int index) {
     return NULL;
 }
 
-int get_hand_size(Deck *deck) {
-    int count = 0;
+void shuffle_deck(Deck *deck) {
     for (int i = 0; i < deck->size; i++) {
-        if (deck->status[i] == CARD_IN_HAND) {
-            count++;
+        if (deck->status[i] == CARD_IN_DISCARD) {
+            deck->status[i] = CARD_IN_DRAW_PILE;
         }
     }
-    return count;
+    deck->cards_in_draw_pile = deck->cards_in_discard;
+    deck->cards_in_discard = 0;
 }
 
 void discard_card(Deck *deck, int index) {
-    assert(index >= 0 && index < deck->size);
+    assert(index >= 0 && index < deck->cards_in_hand);
+    assert(deck->cards_in_hand > 0);
     for (int i = 0, j = 0; i < deck->size; i++) {
         if (deck->status[i] == CARD_IN_HAND) {
             if (j++ == index) {
                 deck->status[i] = CARD_IN_DISCARD;
+                deck->cards_in_hand--;
+                deck->cards_in_discard++;
                 return;
             }
         }
     }
+}
+
+void discard_all(Deck *deck) {
+    for (int i = 0; i < deck->size; i++) {
+        if (deck->status[i] == CARD_IN_HAND) {
+            deck->status[i] = CARD_IN_DISCARD;
+        }
+    }
+    deck->cards_in_discard += deck->cards_in_hand;
+    deck->cards_in_hand = 0;
 }
 
 void free_deck(Deck *deck) {
