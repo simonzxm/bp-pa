@@ -50,6 +50,7 @@ GameState start_gameplay() {
         }
         sts_pause(NULL);
     }
+    sts_clear_screen();
     if (player->base.health <= 0) {
         sts_println("You have been defeated!");
     } else {
