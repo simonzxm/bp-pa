@@ -1,5 +1,6 @@
 #include "card.h"
 #include "deck.h"
+#include "random.h"
 #include <assert.h>
 #include <string.h>
 
@@ -31,9 +32,9 @@ static void test_init_deck_copies_cards_into_draw_pile(void) {
     assert(deck.cards_in_draw_pile == 3);
     assert(deck.cards_in_hand == 0);
     assert(deck.cards_in_discard == 0);
-    assert(strcmp(deck.cards[0].name, "Strike") == 0);
-    assert(strcmp(deck.cards[1].name, "Defend") == 0);
-    assert(strcmp(deck.cards[2].name, "Bloodletting") == 0);
+    assert(strcmp(deck.cards[0].name, "Defend") == 0);
+    assert(strcmp(deck.cards[1].name, "Bloodletting") == 0);
+    assert(strcmp(deck.cards[2].name, "Strike") == 0);
     assert_deck_counts(&deck);
 
     free_deck(&deck);
@@ -49,8 +50,8 @@ static void test_draw_and_find_cards_in_hand(void) {
     assert(deck.cards_in_draw_pile == 1);
     assert(deck.cards_in_hand == 2);
     assert(deck.cards_in_discard == 0);
-    assert(strcmp(find_card_in_hand(&deck, 0)->name, "Strike") == 0);
-    assert(strcmp(find_card_in_hand(&deck, 1)->name, "Defend") == 0);
+    assert(strcmp(find_card_in_hand(&deck, 0)->name, "Bloodletting") == 0);
+    assert(strcmp(find_card_in_hand(&deck, 1)->name, "Strike") == 0);
     assert_deck_counts(&deck);
 
     free_deck(&deck);
@@ -70,8 +71,8 @@ static void test_discard_one_card_from_hand_by_hand_index(void) {
     assert(deck.status[0] == CARD_IN_HAND);
     assert(deck.status[1] == CARD_IN_DISCARD);
     assert(deck.status[2] == CARD_IN_HAND);
-    assert(strcmp(find_card_in_hand(&deck, 0)->name, "Strike") == 0);
-    assert(strcmp(find_card_in_hand(&deck, 1)->name, "Bloodletting") == 0);
+    assert(strcmp(find_card_in_hand(&deck, 0)->name, "Defend") == 0);
+    assert(strcmp(find_card_in_hand(&deck, 1)->name, "Strike") == 0);
     assert_deck_counts(&deck);
 
     free_deck(&deck);
@@ -129,6 +130,7 @@ static void test_init_deck_deep_copies_mutable_card_data(void) {
 }
 
 int main(void) {
+    init_rand_with_seed(42);
     test_init_deck_copies_cards_into_draw_pile();
     test_draw_and_find_cards_in_hand();
     test_discard_one_card_from_hand_by_hand_index();

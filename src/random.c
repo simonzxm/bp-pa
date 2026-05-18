@@ -4,7 +4,7 @@
 
 static int initialized = 0;
 
-void init_rand_without_seed() {
+void init_rand() {
     if (initialized)
         return;
     srand((unsigned int)time(NULL));
