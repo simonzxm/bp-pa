@@ -110,10 +110,28 @@ static void test_draw_reshuffles_discard_when_draw_pile_is_empty(void) {
     free_deck(&deck);
 }
 
+static void test_init_deck_deep_copies_mutable_card_data(void) {
+    CardType types[] = {CARD_RAMPAGE};
+    Deck deck;
+
+    init_deck(&deck, types, 1);
+
+    assert(deck.cards[0].data_cnt == 1);
+    assert(deck.cards[0].data != cards[CARD_RAMPAGE].data);
+    assert(deck.cards[0].data[0] == 8);
+
+    deck.cards[0].data[0] = 42;
+    assert(cards[CARD_RAMPAGE].data[0] == 8);
+    assert_deck_counts(&deck);
+
+    free_deck(&deck);
+}
+
 int main(void) {
     test_init_deck_copies_cards_into_draw_pile();
     test_draw_and_find_cards_in_hand();
     test_discard_one_card_from_hand_by_hand_index();
     test_discard_all_and_shuffle_discard_into_draw_pile();
     test_draw_reshuffles_discard_when_draw_pile_is_empty();
+    test_init_deck_deep_copies_mutable_card_data();
 }
